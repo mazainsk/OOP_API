@@ -3,6 +3,9 @@
 
 from statistics import mean
 
+NOT_AVAILABLE = 'NotImplemented' # Явный NotImplemented в операциях сравнения преобразуется в булевы True/False,
+                                 # поэтому в dunder методах пришлось использовать такой "костыль"
+
 
 class Student:
     def __init__(self, name, surname):
@@ -19,6 +22,7 @@ class Student:
         if (isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in
                 self.courses_in_progress and (1 <= grade <= 10)):
             update_average(lecturer, course, grade)
+            return None
         else:
             return 'Оценка успешно добавлена'
 
@@ -41,32 +45,32 @@ class Student:
 
     def __eq__(self, other):
         if not isinstance(other, Student):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade == other.overall_avr_grade
 
     def __ne__(self, other):
         if not isinstance(other, Student):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade != other.overall_avr_grade
 
     def __lt__(self, other):
         if not isinstance(other, Student):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade < other.overall_avr_grade
 
     def __le__(self, other):
         if not isinstance(other, Student):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade <= other.overall_avr_grade
 
     def __gt__(self, other):
         if not isinstance(other, Student):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade > other.overall_avr_grade
 
     def __ge__(self, other):
         if not isinstance(other, Student):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade >= other.overall_avr_grade
 
 
@@ -91,32 +95,32 @@ class Lecturer(Mentor):
 
     def __eq__(self, other):
         if not isinstance(other, Lecturer):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade == other.overall_avr_grade
 
     def __ne__(self, other):
         if not isinstance(other, Lecturer):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade != other.overall_avr_grade
 
     def __lt__(self, other):
         if not isinstance(other, Lecturer):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade < other.overall_avr_grade
 
     def __le__(self, other):
         if not isinstance(other, Lecturer):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade <= other.overall_avr_grade
 
     def __gt__(self, other):
         if not isinstance(other, Lecturer):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade > other.overall_avr_grade
 
     def __ge__(self, other):
         if not isinstance(other, Lecturer):
-            return NotImplemented
+            return NOT_AVAILABLE
         return self.overall_avr_grade >= other.overall_avr_grade
 
 
@@ -126,6 +130,7 @@ class Reviewer(Mentor):
         if (isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress
                 and 2 <= grade <= 5):
             update_average(student, course, grade)
+            return None
         else:
             return 'Оценка успешно добавлена'
 
@@ -252,10 +257,9 @@ print(f'{lecturer_1.overall_avr_grade} <= {lecturer_2.overall_avr_grade} {lectur
 print(f'{lecturer_1.overall_avr_grade} != {lecturer_2.overall_avr_grade} {lecturer_1 != lecturer_2}')  # True
 print()
 
-# Также можно сравнить оценки студента и лектора. И хотя это не совсем правильно, я не стал добавлять проверку на
-# соответствие типов объектов во все магические методы.
+# Также можно попытаться сравнить оценки студента и лектора:
 print(f'{student_1.overall_avr_grade} == {lecturer_1.overall_avr_grade} {student_1 == lecturer_1}')  # False
-
+print(NOT_AVAILABLE)
 # А вот такое сравнение не пройдет, потому что у проверяющих нет оценок и соответствующего атрибута
 # для их среднего значения:
 # print(student_1 == reviewer_2)
